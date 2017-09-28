@@ -3,6 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import static java.lang.Math.pow;
 import java.math.BigInteger;
 import java.util.*;
@@ -20,6 +22,22 @@ public class Calculator extends javax.swing.JFrame {
      */
     public Calculator() {
         initComponents();
+        
+        input_field.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent e){
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    String input=input_field.getText();
+                    int l=input.length();
+                    if(l>0){
+                        result.setText(result.getText()+hist+". "+input+" = "+Solve(input)+"\n");
+                        hist++;
+                    }
+                    input_field.requestFocusInWindow();
+                }
+            }
+        });
     }
 
     /**
@@ -898,7 +916,7 @@ public class Calculator extends javax.swing.JFrame {
             }
         }
         catch(EmptyStackException er){
-            return "Wrong Expression hint  -x means 0-x";
+            return "Wrong Expression";
         }
         if(stack.size()>1)
             return "Wrong Expression";
