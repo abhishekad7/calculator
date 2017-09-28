@@ -76,7 +76,6 @@ public class Calculator extends javax.swing.JFrame {
         close_bracket = new javax.swing.JButton();
         angle_bracket_open = new javax.swing.JButton();
         angle_bracket_close = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         factorize = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -403,8 +402,6 @@ public class Calculator extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Note: Wrire negative numbers as \"0-x\"(without quotes, where x is positive number) eg. -2 means 0-2");
-
         factorize.setText("Factorize");
         factorize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -419,7 +416,6 @@ public class Calculator extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(input_field, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -582,8 +578,6 @@ public class Calculator extends javax.swing.JFrame {
                         .addComponent(do_zero, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(plus, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(factorize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -604,12 +598,18 @@ public class Calculator extends javax.swing.JFrame {
     
     public static ArrayList<String> ExpToList(String s){
         ArrayList<String> ans = new ArrayList<>();
+        int neg=0;
         for(int i=0;i<s.length();i++){
             int k=s.charAt(i);
             String res="";
             int d=0;
             // Split Numbers
-            if(k>47 && k<58){
+            if((k>47 && k<58) || (s.charAt(i)=='-' && neg==0 && ((int)s.charAt(i+1)>47) && (int)s.charAt(i+1)<58)){
+                if(s.charAt(i)=='-'){
+                    res+="-";
+                    i++;
+                    k=s.charAt(i);
+                }
                 while((k>47 && k<58) || s.charAt(i)=='.'){
                     res+=s.charAt(i);
                     i++;
@@ -618,6 +618,7 @@ public class Calculator extends javax.swing.JFrame {
                     k=s.charAt(i);
                 }
                 i--;
+                neg=1;
                 ans.add(res);
                 continue;
             }
@@ -648,11 +649,13 @@ public class Calculator extends javax.swing.JFrame {
                 ans.add(res);
                 continue;
             }
-
+            if(s.charAt(i)=='(')
+                neg=0;
             
             res+=s.charAt(i);
             ans.add(res);
         }
+        System.out.println("ans = "+ans);
         return ans;
     }
 
@@ -1605,7 +1608,6 @@ public class Calculator extends javax.swing.JFrame {
     private javax.swing.JButton gcd;
     private javax.swing.JButton hex;
     private javax.swing.JTextField input_field;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton lcm;
     private javax.swing.JButton log;
