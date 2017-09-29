@@ -31,8 +31,11 @@ public class Calculator extends javax.swing.JFrame {
                     String input=input_field.getText();
                     int l=input.length();
                     if(l>0){
-                        result.setText(result.getText()+hist+". "+input+" = "+Solve(input)+"\n");
+                        String answer = Solve(input);
+                        result.setText(result.getText()+hist+". "+input+" = "+answer+"\n");
                         hist++;
+                        if(isReal(answer))
+                            input_field.setText(answer);
                     }
                     input_field.requestFocusInWindow();
                 }
@@ -619,6 +622,8 @@ public class Calculator extends javax.swing.JFrame {
         int neg=0;
         for(int i=0;i<s.length();i++){
             int k=s.charAt(i);
+            if(k==32)
+                continue;
             String res="";
             int d=0;
             // Split Numbers
@@ -629,6 +634,10 @@ public class Calculator extends javax.swing.JFrame {
                     k=s.charAt(i);
                 }
                 while((k>47 && k<58) || s.charAt(i)=='.'){
+                    if(k==32){
+                        i++;
+                        continue;
+                    }
                     res+=s.charAt(i);
                     i++;
                     if(i>=s.length())
@@ -644,6 +653,10 @@ public class Calculator extends javax.swing.JFrame {
             if(s.charAt(i)=='<'){
                 int c=0;
                 while(true){
+                    if(s.charAt(i)==' '){
+                        i++;
+                        continue;
+                    }
                     if(s.charAt(i)=='<'){
                         c++;
                         res+=s.charAt(i);
@@ -673,7 +686,6 @@ public class Calculator extends javax.swing.JFrame {
             res+=s.charAt(i);
             ans.add(res);
         }
-        System.out.println("ans = "+ans);
         return ans;
     }
 
@@ -848,14 +860,22 @@ public class Calculator extends javax.swing.JFrame {
                                 String exp1="";
                                 String exp2="";
                                 int com=inExp.indexOf(",");
-                                exp1+=inExp.substring(0,com);
-                                exp2+=inExp.substring(com+1,inExp.length());
-                                exp1=Solve(exp1);
-                                exp2=Solve(exp2);
-                                double val1=Double.parseDouble(exp1);
-                                double val2=Double.parseDouble(exp2);
-                                double val=(double)(gcd((long)val1, (long)val2));
-                                stack.push(val);
+                                if(com!=-1){
+                                    exp1+=inExp.substring(0,com);
+                                    exp2+=inExp.substring(com+1,inExp.length());
+                                    if(exp1.length()>0 && exp2.length()>0){
+                                        exp1=Solve(exp1);
+                                        exp2=Solve(exp2);
+                                        double val1=Double.parseDouble(exp1);
+                                        double val2=Double.parseDouble(exp2);
+                                        double val=(double)(gcd((long)val1, (long)val2));
+                                        stack.push(val);
+                                    }
+                                    else
+                                        return "Expression should be  like <gcd(a,b)>";
+                                }
+                                else
+                                    return "Expression should be  like <gcd(a,b)>";
                             }
                             catch(NumberFormatException er){
                                 return "GCD accept natural numbers";
@@ -866,14 +886,22 @@ public class Calculator extends javax.swing.JFrame {
                                 String exp1="";
                                 String exp2="";
                                 int com=inExp.indexOf(",");
-                                exp1+=inExp.substring(0,com);
-                                exp2+=inExp.substring(com+1,inExp.length());
-                                exp1=Solve(exp1);
-                                exp2=Solve(exp2);
-                                double val1=Double.parseDouble(exp1);
-                                double val2=Double.parseDouble(exp2);
-                                double val=(double)(lcm((long)val1, (long)val2));
-                                stack.push(val);
+                                if(com!=-1){
+                                    exp1+=inExp.substring(0,com);
+                                    exp2+=inExp.substring(com+1,inExp.length());
+                                    if(exp1.length()>0 && exp2.length()>0){
+                                        exp1=Solve(exp1);
+                                        exp2=Solve(exp2);
+                                        double val1=Double.parseDouble(exp1);
+                                        double val2=Double.parseDouble(exp2);
+                                        double val=(double)(lcm((long)val1, (long)val2));
+                                        stack.push(val);
+                                    }
+                                    else
+                                        return "Expression should be  like <lcm(a,b)>";
+                                }
+                                else
+                                    return "Expression should be  like <lcm(a,b)>";
                             }
                             catch(NumberFormatException er){
                                 return "LCM accept natural numbers";
@@ -1277,8 +1305,11 @@ public class Calculator extends javax.swing.JFrame {
         String input=input_field.getText();
         int l=input.length();
         if(l>0){
-            result.setText(result.getText()+hist+". "+input+" = "+Solve(input)+"\n");
+            String answer = Solve(input);
+            result.setText(result.getText()+hist+". "+input+" = "+answer+"\n");
             hist++;
+            if(isReal(answer))
+                input_field.setText(answer);
         }
         input_field.requestFocusInWindow();
     }//GEN-LAST:event_equalsActionPerformed
